@@ -1,15 +1,14 @@
 /*
-    convention: (x,y)
+    convention: (x,y), (0,0) being the upper left corner of the window
 */
 #ifndef SNAKE
 #define SNAKE
 
-#include <vector>
-#include <utility>
+#include "types.h"
 
-typedef std::pair<int, int> position;
-typedef std::pair<int, int> direction;
-typedef std::vector<position> body;
+#include <vector>       // std::vector
+#include <utility>      // std::pair
+#include <algorithm>    // std::find()
 
 class Snake
 {
@@ -18,12 +17,32 @@ class Snake
     Snake();
     Snake(const position& StartingPosition, 
           const direction& StartingDirection);
+
     position get_head() const;
-    position get_tail() const;
-    body get_body() const;
+    position get_next_head() const;
+    position get_tail() const;  // TODO: is this really needed?
+    body get_body() const;  // TODO: consider returning by reference for memory efficiency
+    int get_size() const;
+
     void set_direction(const direction& NewDirection);  // TODO: test for reference issues
-    void update_snake(); // TODO: consider maybe returning some kind of game over flag?
-    // void grow_snake();  // attaches one block to the head?
+    
+    
+    /*  TODO: consider maybe returning some kind of game over flag?
+        ***should be the last thing to be called in each frame***
+    */
+    void move_snake(); 
+
+
+    /*  adds one block to the front of the queue (effectively
+        effectively creating a new head)
+        TODO: throw exception when the new head is not
+        attached to the previous head
+    */
+    
+    void grow_snake(const position& NewHead);
+
+    // bool check_collision(const position& Point) const;
+    void teleport_head(const position& NewPosition);
     
     private:
 
