@@ -9,30 +9,46 @@ TODO: handle edge trespassing
 #include "types.h"
 
 #include "Snake.h"
-#include <random>
+
+// to spawn food blocks randomly:
+#include <ctime>
+#include <cstdlib>
 
 class Environment
 {
     private:
-
     Snake mSnake;
     food_location mFoodLocation;
+
+    const int mEnvWidth;
+    const int mEnvHeight;
 
 
     public:
 
-    void get_snake_body() const;
-    void get_food_location() const;
+    Environment();
+    Environment(const int& EnvWidth, const int& EnvHeight);
+    body get_snake_body() const;
+    food_location get_food_location() const;
 
     // manipulate food
-    void generate_food();       // generate food at random locations. maybe generate more food as snake grows bigger?
+    bool is_food_location(const position&) const; // TODO: DECIDE HOW TO HANDLE FOOD_LOCATION
+    void generate_food(const int& Amount);  // generate food at random locations. maybe generate more food as snake grows bigger?
     // void handle_offscreen();    // handle snake leaving screen limits
     
     // manipulate snake
 
+/*
+    void check_food_collision() const;
+    void check_edge_collision() const;
+    void check_self_collision() const;
+*/
+
+    void set_snake_direction(const direction& NewDirection);
+    
     void handle_food_collision();
     void handle_edge_collision();
-    bool has_self_collision();
+    void handle_self_collision();
     
 };
 

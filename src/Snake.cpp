@@ -42,26 +42,27 @@ body Snake::get_body() const
     return mSnakeBody;
 }
 
-void Snake::set_direction(const direction& NewDirection)
-{
-    mSnakeHeadDirection = NewDirection;
-}
-
 int Snake::get_size() const
 {
     return mSnakeBody.size();
 }
 
+bool Snake::is_in_body(const position& Point) const
+{
+    if (std::find(mSnakeBody.begin(), mSnakeBody.end(), Point) != mSnakeBody.end())
+        return true;
+    else
+        return false;
+}
+
+void Snake::set_direction(const direction& NewDirection)
+{
+    mSnakeHeadDirection = NewDirection;
+}
+
 // move head in the direction of mSnakeDirection, delete tail
 void Snake::move_snake()
 {
-    /*
-    position Head = mSnakeBody.front();
-
-    // vector sum
-    position NewHeadPosition = std::make_pair<int, int> (Head.first + mSnakeHeadDirection.first, Head.second + mSnakeHeadDirection.second);
-    */
-
     position NextHeadPosition = get_next_head();
 
 
@@ -80,24 +81,14 @@ void Snake::teleport_head(const position& NewPosition)
     mSnakeBody.erase(mSnakeBody.end() - 1);                 // delete tail
 }
 
-// bool Snake::check_collision(const position& Point) const
+// #include <cstdio>
+
+// int main()
 // {
-//     // checks if there is a colision between the snake's body
-//     // and a given point
-//     if (std::find(mSnakeBody.begin()+1, mSnakeBody.end(), Point) != mSnakeBody.end())
-//         return true;
-//     else
-//         return false;
+//     Snake my_snake;
+//     printf("Snake head on position (%d, %d)\n", 
+//             my_snake.get_head().first, 
+//             my_snake.get_head().second);
+
+//             return 0;
 // }
-
-#include <cstdio>
-
-int main()
-{
-    Snake my_snake;
-    printf("Snake head on position (%d, %d)\n", 
-            my_snake.get_head().first, 
-            my_snake.get_head().second);
-
-            return 0;
-}

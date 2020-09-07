@@ -23,6 +23,7 @@ class Snake
     position get_tail() const;  // TODO: is this really needed?
     body get_body() const;  // TODO: consider returning by reference for memory efficiency
     int get_size() const;
+    bool is_in_body(const position& Point) const;    // returns true if it is, false otherwise
 
     void set_direction(const direction& NewDirection);  // TODO: test for reference issues
     
