@@ -21,6 +21,16 @@ mSnake(StartingPosition, StartingDirection)
     srand(time(NULL));  // seed for rand()
 }
 
+int Environment::get_environment_width() const
+{
+    return mEnvWidth;
+}
+
+int Environment::get_environment_height() const
+{
+    return mEnvHeight;
+}
+
 body Environment::get_snake_body() const
 {
     return mSnake.get_body();
@@ -119,3 +129,25 @@ void Environment::handle_self_collision()
     // TODO: decide what to do here
 
 }
+
+/*
+
+#include <cstdio>
+
+int main()
+{
+    Environment MyEnvironment;
+    MyEnvironment.generate_food(10);
+
+    food_location FoodLocation = MyEnvironment.get_food_location();
+
+    for (auto it = FoodLocation.begin(); it != FoodLocation.end(); ++it)
+    {
+        printf("(%d, %d)\n", it->first, it->second);
+    }
+
+    return 0;
+
+} 
+
+*/

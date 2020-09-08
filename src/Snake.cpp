@@ -87,7 +87,7 @@ void Snake::teleport_head(const position& NewPosition)
 // {
 //     Snake my_snake;
 //     printf("Snake head on position (%d, %d)\n", 
-//             my_snake.get_head().first, 
+//             my_snake.get_head().first,
 //             my_snake.get_head().second);
 
 //             return 0;

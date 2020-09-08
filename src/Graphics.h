@@ -1,16 +1,27 @@
-/* ADT for a generic graphics interface */
+/*
+
+This creates a 60x60 "window" on a terminal
+
+*/
 
 #ifndef GRAPHICS
 #define GRAPHICS
 
-template <class Environment>
+#include "Environment.h"
+#include <cstdio>
 
 class Graphics
 {
+    private:
+
+    const static int mWidth =  30, mHeight = 10;
+    char mScreen[mHeight+2][mWidth+2];
+
     public:
 
-    virtual void draw_screen(const Environment& CurrentEnvironment) const = 0;
-    virtual void handle_off_screen_limits(const Environment& CurrentEnvironment) = 0;
+    Graphics();
+    void refresh_buffer();
+    void draw_screen(const Environment& CurrentEnvironment);
 };
 
 #endif

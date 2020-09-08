@@ -28,6 +28,8 @@ class Environment
 
     Environment();
     Environment(const int& EnvWidth, const int& EnvHeight);
+    int get_environment_width() const;
+    int get_environment_height() const;
     body get_snake_body() const;
     food_location get_food_location() const;
 
