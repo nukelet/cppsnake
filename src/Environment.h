@@ -14,45 +14,38 @@ TODO: handle edge trespassing
 #include <ctime>
 #include <cstdlib>
 
+enum STATUS
+{
+    GAME_ONGOING,
+    GAME_OVER
+};
+
 class Environment
 {
     private:
+    
+    int mEnvWidth;
+    int mEnvHeight;
+
     Snake mSnake;
     food_location mFoodLocation;
+    direction mMovDirection;
 
-    const int mEnvWidth;
-    const int mEnvHeight;
-
+    // manipulate food
+    void generate_food(const int& Amount);
 
     public:
 
     Environment();
-    Environment(const int& EnvWidth, const int& EnvHeight);
+    Environment(int EnvWidth, int EnvHeight);
     int get_environment_width() const;
     int get_environment_height() const;
-    body get_snake_body() const;
-    food_location get_food_location() const;
+    body& get_snake_body();
+    food_location& get_food_location();
 
-    // manipulate food
-    bool is_food_location(const position&) const; // TODO: DECIDE HOW TO HANDLE FOOD_LOCATION
-    void generate_food(const int& Amount);  // generate food at random locations. maybe generate more food as snake grows bigger?
-    // void handle_offscreen();    // handle snake leaving screen limits
+    void set_mov_direction(direction NewDirection);
     
-    // manipulate snake
-
-/*
-    void check_food_collision() const;
-    void check_edge_collision() const;
-    void check_self_collision() const;
-*/
-
-    void set_snake_direction(const direction& NewDirection);
-    
-    bool handle_food_collision();
-    bool handle_edge_collision();
-    bool handle_self_collision();
-
-    void update_environment();
+    STATUS update_environment();
     
 };
 

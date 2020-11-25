@@ -4,21 +4,23 @@ const position StartingPosition = std::make_pair(0,0);
 const direction StartingDirection = std::make_pair(1, 0);
 
 Environment::Environment():
-
 mEnvWidth(60), 
 mEnvHeight(60), 
-mSnake(StartingPosition, StartingDirection) 
+mSnake(StartingPosition),
+mMovDirection(StartingDirection) 
 {
     srand(time(NULL));  // seed for rand()
+    generate_food(1);
 }
 
-Environment::Environment(const int& EnvWidth, const int& EnvHeight):
-
+Environment::Environment(int EnvWidth, int EnvHeight):
 mEnvWidth(EnvWidth), 
 mEnvHeight(EnvHeight), 
-mSnake(StartingPosition, StartingDirection) 
+mSnake(StartingPosition),
+mMovDirection(StartingDirection)
 {
     srand(time(NULL));  // seed for rand()
+    generate_food(1);
 }
 
 int Environment::get_environment_width() const
@@ -31,14 +33,19 @@ int Environment::get_environment_height() const
     return mEnvHeight;
 }
 
-body Environment::get_snake_body() const
+body& Environment::get_snake_body()
 {
     return mSnake.get_body();
 }
 
-food_location Environment::get_food_location() const
+food_location& Environment::get_food_location()
 {
     return mFoodLocation;
+}
+
+void Environment::set_mov_direction(direction NewDirection)
+{
+    mMovDirection = NewDirection;
 }
 
 void Environment::generate_food(const int& Amount)
@@ -68,94 +75,36 @@ void Environment::generate_food(const int& Amount)
     }
 }
 
-bool Environment::is_food_location(const position& Point) const
+STATUS Environment::update_environment()
 {
-    if (std::find(mFoodLocation.begin(), mFoodLocation.end(), Point) != mFoodLocation.end())
-        return true;
-    else
-        return false;
-}
+    position CurrentHead = mSnake.get_head();
+    position NextHead;
 
-void Environment::set_snake_direction(const direction& NewDirection)
-{
-    mSnake.set_direction(NewDirection);
-}
+    NextHead.first = CurrentHead.first + mMovDirection.first;
+    NextHead.second = CurrentHead.second + mMovDirection.second;
 
-bool Environment::handle_food_collision()
-{
-    position NextHead = mSnake.get_next_head();
+    // handle snake leaving screen borders
+    if (NextHead.first > mEnvWidth)
+        NextHead.first %= mEnvWidth;
 
-    if ( !is_food_location(NextHead) )
-        return false;
+    if (NextHead.second > mEnvHeight)
+        NextHead.second %= mEnvHeight;
 
-    mSnake.grow_snake(NextHead);
-    return true;
-}
-
-bool Environment::handle_edge_collision()
-{
-    position NextHead = mSnake.get_next_head();
-    bool flag = false;
-
-    if (NextHead.first < mEnvWidth)
-    {
-        position NewHeadPosition = std::make_pair(mEnvWidth, NextHead.second);
-        mSnake.teleport_head(NewHeadPosition); 
-        flag = true;    
-    }
-
-    else if (NextHead.first > mEnvWidth)
-    {
-        position NewHeadPosition = std::make_pair(0, NextHead.second);
-        mSnake.teleport_head(NewHeadPosition);
-        flag = true;
-    }
-
-    if (NextHead.second < mEnvHeight)
-    {
-        position NewHeadPosition = std::make_pair(NextHead.first, mEnvHeight);
-        mSnake.teleport_head(NewHeadPosition);
-        flag = true;
-    }
-
-    else if (NextHead.second > mEnvHeight)
-    {
-        position NewHeadPosition = std::make_pair(NextHead.first, 0);
-        mSnake.teleport_head(NewHeadPosition);
-        flag = true;
-    }
-
-    return flag;
-}
-
-bool Environment::handle_self_collision()
-{
-    position NextHead = mSnake.get_next_head();
-
+    // handle collision with the body
     if (mSnake.is_in_body(NextHead))
+        return GAME_OVER;
 
-    // TODO: decide what to do here
-
-}
-
-/*
-
-#include <cstdio>
-
-int main()
-{
-    Environment MyEnvironment;
-    MyEnvironment.generate_food(10);
-
-    food_location FoodLocation = MyEnvironment.get_food_location();
-
-    for (auto it = FoodLocation.begin(); it != FoodLocation.end(); ++it)
+    // handle food collision
+    auto p = std::find(mFoodLocation.begin(), mFoodLocation.end(), NextHead);
+    
+    if (p != mFoodLocation.end())
     {
-        printf("(%d, %d)\n", it->first, it->second);
+        mSnake.insert_new_head(NextHead);
+        mFoodLocation.erase(p);
+        generate_food(1);
+        return GAME_ONGOING;
     }
 
-    return 0;
-
-} 
-
-*/
+    mSnake.update_position(NextHead);
+    return GAME_ONGOING;
+}
