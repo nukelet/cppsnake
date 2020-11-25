@@ -48,9 +48,11 @@ class Environment
 
     void set_snake_direction(const direction& NewDirection);
     
-    void handle_food_collision();
-    void handle_edge_collision();
-    void handle_self_collision();
+    bool handle_food_collision();
+    bool handle_edge_collision();
+    bool handle_self_collision();
+
+    void update_environment();
     
 };
 

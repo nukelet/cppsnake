@@ -1,18 +1,10 @@
 #include "Snake.h"
 
-Snake::Snake()
-{
-    position StartingPosition = std::make_pair<int, int>(0, 0);
-    position StartingDirection = std::make_pair<int, int>(1, 0);    // points to the right
+#include <algorithm>
 
-    mSnakeBody.push_back(StartingPosition);
-    mSnakeHeadDirection = StartingDirection;
-}
-
-Snake::Snake(const position& StartingPosition, const direction& StartingDirection)
+Snake::Snake(position StartingPosition)
 {
-    mSnakeBody.push_back(StartingPosition);
-    mSnakeHeadDirection = StartingDirection;
+    mSnakeBody.push_front(StartingPosition);
 }
 
 position Snake::get_head() const
@@ -20,75 +12,36 @@ position Snake::get_head() const
     return mSnakeBody.front();
 }
 
-position Snake::get_next_head() const
-{
-    position Head = mSnakeBody.front();
-
-    // vector sum
-    position NextHeadPosition = std::make_pair<int, int> (
-        Head.first + mSnakeHeadDirection.first, 
-        Head.second + mSnakeHeadDirection.second);
-
-    return NextHeadPosition;
-}
-
-position Snake::get_tail() const
-{
-    return mSnakeBody.back();
-}
-
-body Snake::get_body() const
+body& Snake::get_body()
 {
     return mSnakeBody;
 }
 
-int Snake::get_size() const
+size_t Snake::get_size() const
 {
     return mSnakeBody.size();
 }
 
 bool Snake::is_in_body(const position& Point) const
 {
-    if (std::find(mSnakeBody.begin(), mSnakeBody.end(), Point) != mSnakeBody.end())
-        return true;
-    else
+    if (find(mSnakeBody.begin(), mSnakeBody.end(), Point) == mSnakeBody.end())
         return false;
+
+    else
+        return true;
 }
 
-void Snake::set_direction(const direction& NewDirection)
+void Snake::update_position(position NewHeadPosition)
 {
-    mSnakeHeadDirection = NewDirection;
+    mSnakeBody.push_front(NewHeadPosition);
+    mSnakeBody.pop_back();
+
+    return;
 }
 
-// move head in the direction of mSnakeDirection, delete tail
-void Snake::move_snake()
+void Snake::insert_new_head(position NewHeadPosition)
 {
-    position NextHeadPosition = get_next_head();
+    mSnakeBody.push_front(NewHeadPosition);
 
-
-    mSnakeBody.insert(mSnakeBody.begin(), NextHeadPosition);     // move head forward
-    mSnakeBody.erase(mSnakeBody.end() - 1);                     // delete tail
+    return;
 }
-
-void Snake::grow_snake(const position& NewHead) 
-{
-    mSnakeBody.insert(mSnakeBody.begin(), NewHead); // insert "new head"
-}
-
-void Snake::teleport_head(const position& NewPosition)
-{
-    mSnakeBody.insert(mSnakeBody.begin(), NewPosition);     // add new head position
-    mSnakeBody.erase(mSnakeBody.end() - 1);                 // delete tail
-}
-
-// #include <cstdio>
-
-// int main()
-// {
-//     Snake my_snake;
-//     printf("Snake head on position (%d, %d)\n", 
-//             my_snake.get_head().first,
-//             my_snake.get_head().second);
-
-//             return 0;
-// }

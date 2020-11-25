@@ -81,50 +81,58 @@ void Environment::set_snake_direction(const direction& NewDirection)
     mSnake.set_direction(NewDirection);
 }
 
-void Environment::handle_food_collision()
+bool Environment::handle_food_collision()
 {
     position NextHead = mSnake.get_next_head();
 
     if ( !is_food_location(NextHead) )
-        return;
+        return false;
 
     mSnake.grow_snake(NextHead);
+    return true;
 }
 
-void Environment::handle_edge_collision()
+bool Environment::handle_edge_collision()
 {
     position NextHead = mSnake.get_next_head();
+    bool flag = false;
 
     if (NextHead.first < mEnvWidth)
     {
         position NewHeadPosition = std::make_pair(mEnvWidth, NextHead.second);
         mSnake.teleport_head(NewHeadPosition); 
+        flag = true;    
     }
 
     else if (NextHead.first > mEnvWidth)
     {
         position NewHeadPosition = std::make_pair(0, NextHead.second);
         mSnake.teleport_head(NewHeadPosition);
+        flag = true;
     }
 
     if (NextHead.second < mEnvHeight)
     {
         position NewHeadPosition = std::make_pair(NextHead.first, mEnvHeight);
         mSnake.teleport_head(NewHeadPosition);
+        flag = true;
     }
 
     else if (NextHead.second > mEnvHeight)
     {
         position NewHeadPosition = std::make_pair(NextHead.first, 0);
         mSnake.teleport_head(NewHeadPosition);
+        flag = true;
     }
+
+    return flag;
 }
 
-void Environment::handle_self_collision()
+bool Environment::handle_self_collision()
 {
     position NextHead = mSnake.get_next_head();
 
-    // if (mSnake.is_in_body(NextHead))
+    if (mSnake.is_in_body(NextHead))
 
     // TODO: decide what to do here
 

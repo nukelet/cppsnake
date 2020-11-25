@@ -3,6 +3,7 @@
 */
 
 #include <vector>
+#include <deque>
 #include <utility>
 
 // used by Snake.h
@@ -10,7 +11,7 @@ class Snake;
 
 typedef std::pair<int, int> position;
 typedef std::pair<int, int> direction;
-typedef std::vector<position> body;
+typedef std::deque<position> body;
 
 // used by Environment.h
 class Environment;
