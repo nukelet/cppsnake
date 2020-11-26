@@ -10,10 +10,6 @@ TODO: handle edge trespassing
 
 #include "Snake.h"
 
-// to spawn food blocks randomly:
-#include <ctime>
-#include <cstdlib>
-
 enum STATUS
 {
     GAME_ONGOING,
@@ -24,8 +20,8 @@ class Environment
 {
     private:
     
-    int mEnvWidth;
     int mEnvHeight;
+    int mEnvWidth;
 
     Snake mSnake;
     food_location mFoodLocation;
@@ -38,10 +34,16 @@ class Environment
 
     Environment();
     Environment(int EnvWidth, int EnvHeight);
+
     int get_environment_width() const;
     int get_environment_height() const;
+    
+    direction get_mov_direction();
+    
     body& get_snake_body();
     food_location& get_food_location();
+
+    size_t get_score();
 
     void set_mov_direction(direction NewDirection);
     

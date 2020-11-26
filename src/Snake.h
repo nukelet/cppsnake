@@ -1,5 +1,5 @@
 /*
-    convention: (x,y), (0,0) being the upper left corner of the window
+    convention: (y, x), with (0,0) being the upper left corner of the window
 */
 #ifndef SNAKE
 #define SNAKE
